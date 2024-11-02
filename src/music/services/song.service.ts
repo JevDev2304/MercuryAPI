@@ -41,6 +41,38 @@ export class SongService {
         }
       }
     }
+
+    async deleteSong(id: number) {
+      // Verifica si el álbum existe antes de intentar eliminarlo
+      const song = await this.findSongById(id);
+      if (!song) {
+        throw new NotFoundException('Song with this id does not exist');
+      }
+    
+      // Define la consulta SQL para eliminar el álbum
+      const queryDelete = `
+        DELETE FROM songs
+        WHERE id = $1
+        RETURNING *;  -- Esta cláusula devuelve los registros eliminados
+      `;
+    
+      // Define los parámetros de la consulta
+      const paramsDelete = [id];
+    
+      // Ejecuta la consulta con los parámetros
+      let deletedSong;
+      try {
+        // Aquí asumimos que executeTransaction soporta RETURNING
+        deletedSong = await this.databaseService.executeTransaction(queryDelete, paramsDelete);
+      } catch (error) {
+        throw new InternalServerErrorException(
+          '(Internal Server Error) -> ' + error,
+        );
+      }
+    
+      return { success: true, data: deletedSong }; // Devuelve el álbum eliminado
+    }
+    
   
     async findSongsFromPlaylist(playlistId: number) {
       let query: string;
@@ -60,6 +92,48 @@ export class SongService {
         ); // Generic internal server error with specific message
       }
     }
+
+    async findSongsFromAlbum(albumId: number){
+      let query: string;
+      let param: any[];
+      query = 'SELECT song_id, genre_id,song_name, lyrics,seconds,song_image,mp3 FROM albums_songs_view WHERE album_id = $1';
+      param = [albumId];
+  
+      try {
+        const result = await this.databaseService.executeTransaction(
+          query,
+          param,
+        );
+        return result;
+      } catch (error) {
+        throw new InternalServerErrorException(
+          'There is a Server Error -> ' + error.message,
+        ); // Generic internal server error with specific message
+      }
+      
+    }
+
+    async findSongsFromArtist(artistId: number){
+      let query: string;
+      let param: any[];
+      query = 'SELECT song_id, genre_id,song_name, lyrics,seconds,song_image,mp3 FROM artists_songs_view WHERE artist_id = $1';
+      param = [artistId];
+  
+      try {
+        const result = await this.databaseService.executeTransaction(
+          query,
+          param,
+        );
+        return result;
+      } catch (error) {
+        throw new InternalServerErrorException(
+          'There is a Server Error -> ' + error.message,
+        ); // Generic internal server error with specific message
+      }
+      
+    }
+
+    
   
     async createSong(song: CreateSongDto) {
       let queryCreate: string;
@@ -82,7 +156,7 @@ export class SongService {
       }
     }
 
-    async addSong(song_id: number, playlistId: number) {
+    async addSongToPlaylist(song_id: number, playlistId: number) {
       let queryCreate: string;
       let paramsCreate: any[];
       queryCreate =
@@ -102,6 +176,56 @@ export class SongService {
         );
       }
     }
+
+    async addSongToArtist(song_id: number, artistId: number) {
+      let queryCreate: string;
+      let paramsCreate: any[];
+      queryCreate =
+        'INSERT INTO artists_songs (song_id, artist_id) VALUES ($1, $2) RETURNING *';
+      paramsCreate = [song_id, artistId];
+      try {
+        const result = await this.databaseService.executeTransaction(
+          queryCreate,
+          paramsCreate,
+        );
+        return result;
+      } catch (error) {
+        if (error === '23503') {
+          throw new NotFoundException('Does not exist a song or artist with these IDs ');}
+        throw new InternalServerErrorException(
+          '(Internal Server Error) -> ' + error,
+        );
+      }
+    }
+
+    async deleteSongFromArtist(song_id: number, artistId: number) {
+      const queryDelete = 'DELETE FROM artists_songs WHERE song_id = $1 AND artist_id = $2 RETURNING *';
+      const paramsDelete = [song_id, artistId];
+    
+      try {
+        const result = await this.databaseService.executeTransaction(queryDelete, paramsDelete);
+        
+        // Verificamos si result tiene datos para determinar si se eliminó algo
+        if (result.data[0].length === 0) { // Suponiendo que result es un array
+          throw new NotFoundException('The song or artist does not exist with the given IDs');
+        }
+    
+        return result;
+      } catch (error) {
+        if (
+          error instanceof NotFoundException ||
+          error instanceof MethodNotAllowedException
+        ) {
+          throw error; // Rethrow the known exceptions
+        } else {
+          throw new InternalServerErrorException(
+            'There is a Server Error -> ' + error.message,
+          ); // Generic internal server error with specific message
+        }
+      }
+    }
+
+
     async deleteSongFromPlaylist(song_id: number, playlistId: number) {
       const queryDelete = 'DELETE FROM playlists_songs WHERE song_id = $1 AND playlist_id = $2 RETURNING *';
       const paramsDelete = [song_id, playlistId];
@@ -112,6 +236,57 @@ export class SongService {
         // Verificamos si result tiene datos para determinar si se eliminó algo
         if (result.data[0].length === 0) { // Suponiendo que result es un array
           throw new NotFoundException('The song or playlist does not exist with the given IDs');
+        }
+    
+        return result;
+      } catch (error) {
+        if (
+          error instanceof NotFoundException ||
+          error instanceof MethodNotAllowedException
+        ) {
+          throw error; // Rethrow the known exceptions
+        } else {
+          throw new InternalServerErrorException(
+            'There is a Server Error -> ' + error.message,
+          ); // Generic internal server error with specific message
+        }
+      }
+    }
+
+
+    async addSongToAlbum(song_id: number, albumId: number) {
+      let queryCreate: string;
+      let paramsCreate: any[];
+      queryCreate =
+        'INSERT INTO albums_songs (song_id, album_id) VALUES ($1, $2) RETURNING *';
+      paramsCreate = [song_id, albumId];
+      try {
+        const result = await this.databaseService.executeTransaction(
+          queryCreate,
+          paramsCreate,
+        );
+        return result;
+      } catch (error) {
+        if (error === '23503') {
+          throw new NotFoundException('Does not exist a song or album with these IDs ');}
+        throw new InternalServerErrorException(
+          '(Internal Server Error) -> ' + error,
+        );
+      }
+    }
+
+
+
+    async deleteSongFromAlbum(song_id: number, albumId: number) {
+      const queryDelete = 'DELETE FROM albums_songs WHERE song_id = $1 AND album_id = $2 RETURNING *';
+      const paramsDelete = [song_id, albumId];
+    
+      try {
+        const result = await this.databaseService.executeTransaction(queryDelete, paramsDelete);
+        
+        // Verificamos si result tiene datos para determinar si se eliminó algo
+        if (result.data[0].length === 0) { // Suponiendo que result es un array
+          throw new NotFoundException('The song or album does not exist with the given IDs');
         }
     
         return result;

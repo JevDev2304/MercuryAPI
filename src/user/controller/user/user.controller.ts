@@ -10,7 +10,6 @@ import { UpdateUserDto } from 'src/user/dtos/update-user.dto';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
-    @UseGuards(JwtAuthGuard)
     @Post()
     @ApiBody({type: CreateUserDto})
     @ApiResponse({status: 201, description: 'User created successfully'})

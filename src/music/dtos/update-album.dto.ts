@@ -1,10 +1,9 @@
 import { IsNumber , IsString, Length} from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateSongDto } from './create-song.dto';
+import { CreateAlbumDto } from './create-album.dto';
 
-export class UpdateSongDto extends PartialType(CreateSongDto) {
+export class UpdateAlbumDto extends PartialType(CreateAlbumDto) {
     @ApiProperty({ required: true })
     @IsNumber()
     id: number;
-
 }

@@ -112,7 +112,8 @@ export class PlaylistService {
             SET user_id = $2, 
                 name = $3, 
                 is_public = $4, 
-                created_at = $5
+                created_at = $5,
+                image = $6
             WHERE id = $1
         `;
 
@@ -123,6 +124,7 @@ export class PlaylistService {
       playlist.name,
       playlist.is_public,
       playlist.created_at,
+      playlist.image
     ];
 
     // Ejecuta la consulta con los parámetros
