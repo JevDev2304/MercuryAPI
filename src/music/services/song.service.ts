@@ -72,12 +72,10 @@ export class SongService {
     
       return { success: true, data: deletedSong }; // Devuelve el álbum eliminado
     }
-    
-  
     async findSongsFromPlaylist(playlistId: number) {
       let query: string;
       let param: any[];
-      query = 'SELECT song_id, genre_id,song_name, lyrics,seconds,song_image,mp3 FROM playlists_songs_view WHERE playlist_id = $1';
+      query = 'SELECT song_id, genre_id,song_name, lyrics,time,song_image,mp3 FROM playlists_songs_view WHERE playlist_id = $1';
       param = [playlistId];
   
       try {
@@ -92,11 +90,10 @@ export class SongService {
         ); // Generic internal server error with specific message
       }
     }
-
     async findSongsFromAlbum(albumId: number){
       let query: string;
       let param: any[];
-      query = 'SELECT song_id, genre_id,song_name, lyrics,seconds,song_image,mp3 FROM albums_songs_view WHERE album_id = $1';
+      query = 'SELECT song_id, genre_id,song_name, lyrics,time,song_image,mp3 FROM albums_songs_view WHERE album_id = $1';
       param = [albumId];
   
       try {
@@ -116,7 +113,7 @@ export class SongService {
     async findSongsFromArtist(artistId: number){
       let query: string;
       let param: any[];
-      query = 'SELECT song_id, genre_id,song_name, lyrics,seconds,song_image,mp3 FROM artists_songs_view WHERE artist_id = $1';
+      query = 'SELECT song_id, genre_id,song_name, lyrics,time,song_image,mp3 FROM artists_songs_view WHERE artist_id = $1';
       param = [artistId];
   
       try {
@@ -139,8 +136,8 @@ export class SongService {
       let queryCreate: string;
       let paramsCreate: any[];
       queryCreate =
-        'INSERT INTO songs (name, lyrics, seconds, image, mp3, genre_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-      paramsCreate = [song.name, song.lyrics, song.seconds, song.image,song.mp3, song.genre_id];
+        'INSERT INTO songs (name, lyrics, time, image, mp3, genre_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+      paramsCreate = [song.name, song.lyrics, song.time, song.image,song.mp3, song.genre_id];
       try {
         const result = await this.databaseService.executeTransaction(
           queryCreate,
@@ -321,7 +318,7 @@ export class SongService {
                   name = $3, 
                   lyrics = $4, 
                   created_at = $5,
-                  seconds = $6,
+                  time = $6,
                   image = $7,
                   mp3 = $8
               WHERE id = $1
@@ -334,7 +331,7 @@ export class SongService {
         song.name,
         song.lyrics,
         song.created_at,
-        song.seconds,
+        song.time,
         song.image, 
         song.mp3
       ];

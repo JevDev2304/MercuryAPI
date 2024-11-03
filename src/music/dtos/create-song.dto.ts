@@ -16,8 +16,8 @@ export class CreateSongDto {
   @IsNotEmpty()
   lyrics: string;
   @ApiProperty()
-  @IsNumber()
-  seconds: number;
+  @IsString()
+  time: string;
   @ApiProperty({description:'image link'})
   @Length(255)
   @IsString()
