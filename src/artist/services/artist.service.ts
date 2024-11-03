@@ -4,11 +4,14 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateArtistDto } from '../dtos/create-artist.dto';
 import { UpdateArtistDto } from '../dtos/update-artist.dto';
+import { HashService } from 'src/crypt/services/hash.service';
 
 
 @Injectable()
 export class ArtistService {
-    constructor(private readonly databaseService: DatabaseService) {}
+    constructor(private readonly databaseService: DatabaseService,
+      private readonly hashService: HashService
+    ) {}
     async findArtistByEmail(email: string){
         console.log(email)
         let query : string;
@@ -55,7 +58,8 @@ async createArtist(user: CreateArtistDto) {
     let paramsCreate: any[];
     if (user.country) {
       queryCreate = 'INSERT INTO artists (name, email, password, country) VALUES ($1, $2, $3, $4) RETURNING *';
-      paramsCreate = [user.name, user.email, user.password, user.country.toUpperCase()];
+      let hashedPassword =await this.hashService.hashPassword(user.password);
+      paramsCreate = [user.name, user.email, hashedPassword, user.country.toUpperCase()];
     } else {
       queryCreate = 'INSERT INTO artists (name, email, password) VALUES ($1, $2, $3) RETURNING *';
       paramsCreate = [user.name, user.email, user.password];
@@ -80,6 +84,9 @@ async createArtist(user: CreateArtistDto) {
   }
 
   async updateArtist(payload: UpdateArtistDto) {
+    if(payload.password){
+      payload.password = await this.hashService.hashPassword(payload.password);
+    }
     const artistBeforeChange = await this.findArtistById(payload.id);
     console.log(artistBeforeChange);
 

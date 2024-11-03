@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/services/user.service';
 import { ArtistService } from 'src/artist/services/artist.service';
 import { DatabaseService } from 'src/database/database.service';
+import { HashService } from 'src/crypt/services/hash.service';
 
 
 @Injectable()
@@ -11,19 +12,20 @@ export class AuthService {
         private databaseService : DatabaseService,
         private userService : UserService,
         private artistService : ArtistService,
+        private hashService: HashService,
         private jwtService : JwtService
     ){}
     async validateUser(email: string , password: string){
         const user = (await this.userService.findUserByEmail(email));
 
-        if (user && user.data.length === 1 && password === user.data[0].password){
+        if (user && user.data.length === 1 && await this.hashService.validatePassword(password,user.data[0].password)){
             const { password, ...result } = user.data[0];
             const final_result  = {...result, 'role':'user'}
             return final_result
         }
         else{
             const artist = (await this.artistService.findArtistByEmail(email))
-            if (artist && artist.data.length === 1 && password === artist.data[0].password){
+            if (artist && artist.data.length === 1 && await this.hashService.validatePassword(password,artist.data[0].password)){
             const { password, ...result } = artist.data[0];
             const final_result  = {...result, 'role':'artist'}
 

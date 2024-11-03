@@ -9,6 +9,7 @@ import { ArtistModule } from './artist/artist.module';
 import { MessageModule } from './message/message.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
+import { CryptModule } from './crypt/crypt.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
     MessageModule,
     DatabaseModule,
     AuthModule,
+    CryptModule,
   ],
 
   controllers: [AppController],

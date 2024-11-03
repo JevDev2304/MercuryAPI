@@ -2,10 +2,13 @@ import { Injectable, ConflictException,BadRequestException, InternalServerErrorE
 import { DatabaseService } from 'src/database/database.service';// Asegúrate de importar tu servicio de base de datos
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { HashService } from 'src/crypt/services/hash.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService,
+    private readonly hashService : HashService
+  ) {}
 
   async findUserByEmail(email: string){
     console.log(email)
@@ -55,19 +58,20 @@ export class UserService {
   async createUser(user: CreateUserDto) {
     let queryCreate: string;
     let paramsCreate: any[];
+    let hashedPassword = await this.hashService.hashPassword(user.password);
     if (user.country) {
       queryCreate = 'INSERT INTO users (username, email, password, country, birth) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-      paramsCreate = [user.username, user.email, user.password, user.country.toUpperCase(), user.birth];
+      paramsCreate = [user.username, user.email, hashedPassword, user.country.toUpperCase(), user.birth];
     } else {
       queryCreate = 'INSERT INTO users (username, email, password, birth) VALUES ($1, $2, $3, $4) RETURNING *';
-      paramsCreate = [user.username, user.email, user.password, user.birth];
+      paramsCreate = [user.username, user.email, hashedPassword, user.birth];
     }
     try{
       const result = await this.databaseService.executeTransaction(queryCreate, paramsCreate);
       return result;
     }
     catch(error){
-        if (error.code === '23505') { 
+        if (error.code === '23505' || error === '23505') { 
             throw new ConflictException('Already exist an user with this username or email');
           }
         else if (error === '22007' || error === '22008'){
@@ -82,6 +86,9 @@ export class UserService {
   }
 
   async updateUser(payload: UpdateUserDto) {
+    if (payload.password){
+      payload.password = await this.hashService.hashPassword(payload.password);
+    }
     const userBeforeChange = await this.findUserById(payload.id);
 
     if (!userBeforeChange) {

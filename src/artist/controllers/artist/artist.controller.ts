@@ -13,7 +13,6 @@ import { UpdateArtistDto } from 'src/artist/dtos/update-artist.dto';
 @Controller('artist')
 export class ArtistController {
     constructor(private readonly artistService: ArtistService) {}
-    @UseGuards(JwtAuthGuard)
     @Post()
     @ApiBody({type: CreateArtistDto})
     @ApiResponse({status: 201, description: 'Artist created successfully'})
