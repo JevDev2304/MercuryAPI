@@ -38,9 +38,18 @@ export class AuthService {
 
     async login(user:any, ip:string){
         const payload = {username: user.email, sub:user.id, role: user.role};
-        const query = 'INSERT INTO histories (user_id, ip) VALUES ($1, $2) RETURNING *'
+        if (user.role === 'user'){
+        const query = 'INSERT INTO histories_user (user_id, ip) VALUES ($1, $2) RETURNING *'
         const params = [user.id,ip]
         await this.databaseService.executeTransaction(query,params);
+        }
+        else if (user.role === 'artist'){
+        const query = 'INSERT INTO histories_artist (artist_id, ip) VALUES ($1, $2) RETURNING *'
+        const params = [user.id,ip]
+        await this.databaseService.executeTransaction(query,params);
+
+        }
+        
         return {
             access_token: this.jwtService.sign(payload)
         }

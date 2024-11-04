@@ -58,7 +58,7 @@ async createArtist(user: CreateArtistDto) {
     let paramsCreate: any[];
     if (user.country) {
       queryCreate = 'INSERT INTO artists (name, email, password, country) VALUES ($1, $2, $3, $4) RETURNING *';
-      let hashedPassword =await this.hashService.hashPassword(user.password);
+      let hashedPassword = await this.hashService.hashPassword(user.password);
       paramsCreate = [user.name, user.email, hashedPassword, user.country.toUpperCase()];
     } else {
       queryCreate = 'INSERT INTO artists (name, email, password) VALUES ($1, $2, $3) RETURNING *';
@@ -69,14 +69,19 @@ async createArtist(user: CreateArtistDto) {
       return result;
     }
     catch(error){
-        if (error === '23505') { 
+      if (error instanceof AggregateError) {
+        for (const e of error.errors) {
+          console.error("Error individual:", e);
+        }
+      }
+      else if (error === '23505') { 
             throw new ConflictException('Already exist an artist with this name or email');
           }
         else if (error === '22007' || error === '22008'){
             throw new BadRequestException('Wrong Date Format');
           }
         else {
-            throw new InternalServerErrorException('(Internal Server Error) -> ' + error)
+            throw new InternalServerErrorException('(Internal Server Error) -> ' + error.errors)
         } 
 
     }
