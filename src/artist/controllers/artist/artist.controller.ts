@@ -29,5 +29,20 @@ export class ArtistController {
             const response = await this.artistService.updateArtist(updateUserDto);
             return response
         }
+    @UseGuards(JwtAuthGuard)
+    @Get('getById/:artistId')
+    @ApiResponse({
+          status: 200,
+          description: 'The artist was retrieved successfully.',
+        })
+    async getArtist(
+    @Param('artistId') artistId: string, // Cambia a string también
+        ) {
+          // Convierte a número
+          const numericArtistId = parseInt(artistId, 10); // Convierte a número
+          const response = await this.artistService.findArtistById(numericArtistId);
+          const {password, ...rest} = response;
+          return rest;
+        }
 
 }

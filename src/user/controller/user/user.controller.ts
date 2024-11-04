@@ -25,12 +25,20 @@ export class UserController {
             const response = await this.userService.updateUser(updateUserDto);
             return response
         }
-
-    // @UseGuards(JwtAuthGuard)
-    // @Get(':email')
-    // async getUser(@Param('email') email:string){
-    //     const response = await this.userService.findUserByEmail(email)
-    //     return response
-    //     }
+    @UseGuards(JwtAuthGuard)
+    @Get('getById/:userId')
+    @ApiResponse({
+            status: 200,
+            description: 'The user was retrieved successfully.',
+        })
+    async getUser(
+    @Param('userId') userId: string, // Cambia a string también
+        ) {
+            // Convierte a número
+            const numericUserId = parseInt(userId, 10); // Convierte a número
+            const response = await this.userService.findUserById(numericUserId);
+            const {password, ...rest} = response;
+            return rest;
+        }
         
     }

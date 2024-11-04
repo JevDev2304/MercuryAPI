@@ -48,6 +48,9 @@ export class UserService {
       
     }
     catch(error){
+      if (error instanceof NotFoundException) {
+        throw  new NotFoundException('The User does not exist');
+      }
       console.error(error)
       throw new InternalServerErrorException('Internal Server Error :( ')
     }

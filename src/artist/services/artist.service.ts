@@ -5,6 +5,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { CreateArtistDto } from '../dtos/create-artist.dto';
 import { UpdateArtistDto } from '../dtos/update-artist.dto';
 import { HashService } from 'src/crypt/services/hash.service';
+import { Not } from 'typeorm';
 
 
 @Injectable()
@@ -47,8 +48,11 @@ async findArtistById(id: number){
       
     }
     catch(error){
+      if (error instanceof NotFoundException) {
+        throw  new NotFoundException('The Artist does not exist');
+      }
       console.error(error)
-      throw new InternalServerErrorException('Internal Server Error :( ')
+      throw new InternalServerErrorException('Internal Server Error :( ');
     }
 
   }

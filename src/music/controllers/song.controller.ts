@@ -201,4 +201,19 @@ export class SongController {
       await this.songService.deleteSong(numericalSongId);
     return response;
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getById/:songId')
+  @ApiResponse({
+        status: 200,
+        description: 'The song was retrieved successfully.',
+      })
+  async getSong(
+  @Param('songId') songId: string, // Cambia a string también
+      ) {
+        // Convierte a número
+        const numericSongId = parseInt(songId, 10); // Convierte a número
+        const response = await this.songService.findSongById(numericSongId);
+        return response;
+      }
 }

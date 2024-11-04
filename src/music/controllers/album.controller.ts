@@ -49,4 +49,19 @@ export class AlbumController {
       await this.albumService.deleteAlbum(numericAlbumId);
     return response;
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getById/:albumId')
+  @ApiResponse({
+        status: 200,
+        description: 'The album was retrieved successfully.',
+      })
+  async getAlbum(
+  @Param('albumId') albumId: string, // Cambia a string también
+      ) {
+        // Convierte a número
+        const numericAlbumId = parseInt(albumId, 10); // Convierte a número
+        const response = await this.albumService.findAlbumById(numericAlbumId);
+        return response;
+      }
 }

@@ -32,10 +32,25 @@ export class PlaylistController {
   }
   @UseGuards(JwtAuthGuard)
   @Get(':userId')
-  @ApiResponse({ status: 200, description: 'User playlist retrieved successfully' })
+  @ApiResponse({ status: 200, description: 'User playlists retrieved successfully' })
   async userPlaylists(@Param('userId') userId: number) {
     const response =
       await this.playlistService.findUserPlaylists(userId);
     return response;
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getById/:playlistId')
+  @ApiResponse({
+        status: 200,
+        description: 'The playlist was retrieved successfully.',
+      })
+  async getPlaylist(
+  @Param('playlistId') playlistId: string, // Cambia a string también
+      ) {
+        // Convierte a número
+        const numericPlaylistId = parseInt(playlistId, 10); // Convierte a número
+        const response = await this.playlistService.findPlaylistById(numericPlaylistId);
+        return response;
+      }
 }
