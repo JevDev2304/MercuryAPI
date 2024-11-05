@@ -45,4 +45,17 @@ export class ArtistController {
           return rest;
         }
 
+        @UseGuards(JwtAuthGuard)
+        @Get('getArtistsByWord/:word')
+        @ApiResponse({
+              status: 200,
+              description: 'The artists were retrieved successfully.',
+            })
+        async getArtistsByWord(
+        @Param('word')  word: string, // Cambia a string también
+            ) {
+              const response = await this.artistService.findArtistsforSearchEngine(word);
+              return response;
+            }
+
 }

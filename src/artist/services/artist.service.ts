@@ -150,6 +150,32 @@ async createArtist(user: CreateArtistDto) {
     return { success: true, data: artist };
 }
 
+async findArtistsforSearchEngine(word: string) {
+  let query: string;
+  let param: any[];
+  query = 'SELECT * FROM artists WHERE LOWER(name) LIKE $1;'; // Simplified the query
+  word = word.toLowerCase();
+  const wordFormatted = `%${word}%`; 
+  param = [wordFormatted];
+
+  try {
+    const result = await this.databaseService.executeTransaction(
+      query,
+      param,
+    );
+
+    if (result.data.length >= 0) {
+      return result.data;
+    }
+  } catch (error) {
+    
+      throw new InternalServerErrorException(
+        'There is a Server Error -> ' + error.message,
+      ); // Generic internal server error with specific message
+    
+  }
+}
+
 
 
 }

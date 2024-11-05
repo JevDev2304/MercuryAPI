@@ -64,4 +64,31 @@ export class AlbumController {
         const response = await this.albumService.findAlbumById(numericAlbumId);
         return response;
       }
+      @UseGuards(JwtAuthGuard)
+      @Get('getAlbumsByGenreId/:genreId')
+      @ApiResponse({
+            status: 200,
+            description: 'The albums were retrieved successfully.',
+          })
+      async getSongsByGenreId(
+      @Param('genreId') genreId: string, // Cambia a string también
+          ) {
+            // Convierte a número
+            const numericGenreId = parseInt(genreId, 10); // Convierte a número
+            const response = await this.albumService.findAlbumsByGenreId(numericGenreId);
+            return response;
+          }
+    
+          @UseGuards(JwtAuthGuard)
+      @Get('getAlbumsByWord/:word')
+      @ApiResponse({
+            status: 200,
+            description: 'The albums were retrieved successfully.',
+          })
+      async getAlbumsByWord(
+      @Param('word')  word: string, // Cambia a string también
+          ) {
+            const response = await this.albumService.findAlbumsforSearchEngine(word);
+            return response;
+          }
 }

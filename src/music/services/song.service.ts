@@ -93,6 +93,30 @@ export class SongService {
       }
     }
 
+    async getRandomSongs(n: number) {
+      let query: string;
+      let param: any[];
+      query = 'SELECT * FROM songs ORDER BY RANDOM() LIMIT $1';
+      param = [n];
+  
+      try {
+        const result = await this.databaseService.executeTransaction(
+          query,
+          param,
+        );
+  
+        if (result.data.length >= 0) {
+          return result.data;
+        }
+      } catch (error) {
+        
+          throw new InternalServerErrorException(
+            'There is a Server Error -> ' + error.message,
+          ); // Generic internal server error with specific message
+        
+      }
+    }
+
     async deleteSong(id: number) {
       // Verifica si el álbum existe antes de intentar eliminarlo
       const song = await this.findSongById(id);

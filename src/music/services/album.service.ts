@@ -28,6 +28,56 @@ export class AlbumService {
       
     }
 
+    async findAlbumsByGenreId(id: number) {
+      let query: string;
+      let param: any[];
+      query = 'SELECT * FROM albums WHERE genre_id = $1'; // Simplified the query
+      param = [id];
+  
+      try {
+        const result = await this.databaseService.executeTransaction(
+          query,
+          param,
+        );
+  
+        if (result.data.length >= 0) {
+          return result.data;
+        }
+      } catch (error) {
+        
+          throw new InternalServerErrorException(
+            'There is a Server Error -> ' + error.message,
+          ); // Generic internal server error with specific message
+        
+      }
+    }
+
+    async findAlbumsforSearchEngine(word: string) {
+      let query: string;
+      let param: any[];
+      query = 'SELECT * FROM albums WHERE LOWER(name) LIKE $1;'; // Simplified the query
+      word = word.toLowerCase();
+      const wordFormatted = `%${word}%`; 
+      param = [wordFormatted];
+  
+      try {
+        const result = await this.databaseService.executeTransaction(
+          query,
+          param,
+        );
+  
+        if (result.data.length >= 0) {
+          return result.data;
+        }
+      } catch (error) {
+        
+          throw new InternalServerErrorException(
+            'There is a Server Error -> ' + error.message,
+          ); // Generic internal server error with specific message
+        
+      }
+    }
+
     async findAlbumById(id: number) {
       let query: string;
       let param: any[];

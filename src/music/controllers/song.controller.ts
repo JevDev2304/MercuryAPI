@@ -233,6 +233,21 @@ export class SongController {
       }
 
       @UseGuards(JwtAuthGuard)
+  @Get('getRandomSongs/:n')
+  @ApiResponse({
+        status: 200,
+        description: 'The random songs were retrieved successfully.',
+      })
+  async getRandomSongs(
+  @Param('n') n: string, // Cambia a string también
+      ) {
+        // Convierte a número
+        const numericN = parseInt(n, 10); // Convierte a número
+        const response = await this.songService.getRandomSongs(numericN);
+        return response;
+      }
+
+      @UseGuards(JwtAuthGuard)
   @Get('getSongsByWord/:word')
   @ApiResponse({
         status: 200,
