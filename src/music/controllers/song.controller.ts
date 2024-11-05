@@ -184,6 +184,21 @@ export class SongController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('/replaySong/:songId')
+  @ApiResponse({
+    status: 200,
+    description: 'The replay from the song were created successfully.',
+  })
+  async replaySong(
+    @Param('songId') songId: string, // Cambia a string también
+  ) {
+    // Convierte a número
+    const numericSongId = parseInt(songId, 10); // Convierte a número
+    const response = await this.songService.replaySong(numericSongId);
+    return response;
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Put()
   @ApiBody({ type: UpdateSongDto })
   @ApiResponse({ status: 200, description: 'Song updated successfully' })
@@ -216,6 +231,20 @@ export class SongController {
         const response = await this.songService.findSongById(numericSongId);
         return response;
       }
+
+      @UseGuards(JwtAuthGuard)
+      @Get('top20')
+      @ApiResponse({
+            status: 200,
+            description: 'The songs was retrieved successfully.',
+          })
+
+      async getTop20Songs( // Cambia a string también
+) {
+            // Convierte a número// Convierte a número
+            const response = await this.songService.top20Songs();
+            return response;
+          }
 
   @UseGuards(JwtAuthGuard)
   @Get('getSongsByGenreId/:genreId')

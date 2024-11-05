@@ -22,6 +22,19 @@ export class AlbumController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('top20')
+  @ApiResponse({
+  status: 200,
+  description: 'The albums was retrieved successfully.',
+            })
+  
+   async getTop20Albums(
+  ) {
+        const response = await this.albumService.top20Albums();
+        return response;
+            }
+
+  @UseGuards(JwtAuthGuard)
   @Put()
   @ApiBody({ type: UpdateAlbumDto })
   @ApiResponse({ status: 200, description: 'Album updated successfully' })
@@ -91,4 +104,6 @@ export class AlbumController {
             const response = await this.albumService.findAlbumsforSearchEngine(word);
             return response;
           }
+
+ 
 }

@@ -78,6 +78,21 @@ export class AlbumService {
       }
     }
 
+    async top20Albums() {
+      let query: string;
+      query = 'SELECT * FROM albums_replays ORDER BY play_count DESC LIMIT 20;';
+  
+      try {
+          const result = await this.databaseService.executeTransaction(query);
+          return result;
+      } catch (error) {
+          throw new InternalServerErrorException(
+              'There is a Server Error -> ' + error.message,
+          );
+      }
+  }
+  
+
     async findAlbumById(id: number) {
       let query: string;
       let param: any[];

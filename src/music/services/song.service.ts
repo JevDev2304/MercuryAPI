@@ -184,6 +184,23 @@ export class SongService {
       }
       
     }
+    async top20Songs(){
+      let query: string;
+      let param: any[];
+      query = 'SELECT * FROM songs_replays ORDER BY play_count DESC LIMIT 20;';
+  
+      try {
+        const result = await this.databaseService.executeTransaction(
+          query
+        );
+        return result;
+      } catch (error) {
+        throw new InternalServerErrorException(
+          'There is a Server Error -> ' + error.message,
+        ); // Generic internal server error with specific message
+      }
+      
+    }
 
     async findSongsFromArtist(artistId: number){
       let query: string;
@@ -243,6 +260,28 @@ export class SongService {
       } catch (error) {
         if (error === '23503') {
           throw new NotFoundException('Does not exist a song or playlist with these IDs ');}
+        throw new InternalServerErrorException(
+          '(Internal Server Error) -> ' + error,
+        );
+      }
+    }
+
+    async replaySong(song_id: number) {
+      let queryCreate: string;
+      let paramsCreate: any[];
+      queryCreate =
+        'INSERT INTO replays (song_id) VALUES ($1) RETURNING *';
+      paramsCreate = [song_id];
+      try {
+        const result = await this.databaseService.executeTransaction(
+          queryCreate,
+          paramsCreate,
+        );
+        return result;
+      } catch (error) {
+        console.error(error);
+        if (error === '23503' || error.code === '23503') {
+          throw new NotFoundException('Does not exist a song  with this ID ');}
         throw new InternalServerErrorException(
           '(Internal Server Error) -> ' + error,
         );
