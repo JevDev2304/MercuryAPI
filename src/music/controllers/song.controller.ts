@@ -216,4 +216,32 @@ export class SongController {
         const response = await this.songService.findSongById(numericSongId);
         return response;
       }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getSongsByGenreId/:genreId')
+  @ApiResponse({
+        status: 200,
+        description: 'The songs were retrieved successfully.',
+      })
+  async getSongsByGenreId(
+  @Param('genreId') genreId: string, // Cambia a string también
+      ) {
+        // Convierte a número
+        const numericGenreId = parseInt(genreId, 10); // Convierte a número
+        const response = await this.songService.findSongsByGenreId(numericGenreId);
+        return response;
+      }
+
+      @UseGuards(JwtAuthGuard)
+  @Get('getSongsByWord/:word')
+  @ApiResponse({
+        status: 200,
+        description: 'The songs were retrieved successfully.',
+      })
+  async getSongsByWord(
+  @Param('word')  word: string, // Cambia a string también
+      ) {
+        const response = await this.songService.findSongsforSearchEngine(word);
+        return response;
+      }
 }
