@@ -77,7 +77,7 @@ export class UserService {
         if (error.code === '23505' || error === '23505') { 
             throw new ConflictException('Already exist an user with this username or email');
           }
-        else if (error === '22007' || error === '22008'){
+        else if (error.code === '22007' || error.code === '22008'){
             throw new BadRequestException('Wrong Date Format');
           }
         else {
