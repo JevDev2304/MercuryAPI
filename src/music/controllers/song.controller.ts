@@ -28,7 +28,7 @@ export class SongController {
     return response;
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addSongToPlaylist/:songId/:playlistId')
   @ApiResponse({
     status: 201,

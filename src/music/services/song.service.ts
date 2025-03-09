@@ -237,7 +237,7 @@ export class SongService {
         );
         return result;
       } catch (error) {
-        if (error === '23503') {
+        if (error.code === '23503') {
           throw new NotFoundException('Does not exist a genre with this ID ');}
         throw new InternalServerErrorException(
           '(Internal Server Error) -> ' + error,
@@ -258,7 +258,7 @@ export class SongService {
         );
         return result;
       } catch (error) {
-        if (error === '23503') {
+        if (error.code === '23503') {
           throw new NotFoundException('Does not exist a song or playlist with these IDs ');}
         throw new InternalServerErrorException(
           '(Internal Server Error) -> ' + error,
@@ -279,7 +279,7 @@ export class SongService {
         );
         return result;
       } catch (error) {
-        console.error(error);
+        console.log(error);
         if (error === '23503' || error.code === '23503') {
           throw new NotFoundException('Does not exist a song  with this ID ');}
         throw new InternalServerErrorException(

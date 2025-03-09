@@ -4,6 +4,8 @@ import { UserService } from 'src/user/services/user.service';
 import { ArtistService } from 'src/artist/services/artist.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HashService } from 'src/crypt/services/hash.service';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { LoginUserDto } from '../login.dto';
 
 
 @Injectable()
@@ -36,22 +38,30 @@ export class AuthService {
         return null
     }
 
-    async login(user:any, ip:string){
-        const payload = {username: user.email, sub:user.id, role: user.role};
-        if (user.role === 'user'){
-        const query = 'INSERT INTO histories_user (user_id, ip) VALUES ($1, $2) RETURNING *'
-        const params = [user.id,ip]
-        await this.databaseService.executeTransaction(query,params);
+    async login(user:LoginUserDto, ip:string){
+        let query: string;
+        let params: any[];
+    
+        const payload = { username: user.email, sub: user.id, role: user.role };
+    
+        if (user.role === 'user') {
+            query = 'INSERT INTO histories_user (user_id, ip) VALUES ($1, $2) RETURNING *';
+            params = [user.id, ip];
+        } else if (user.role === 'artist') {
+            query = 'INSERT INTO histories_artist (artist_id, ip) VALUES ($1, $2) RETURNING *';
+            params = [user.id, ip];
+        } else {
+            throw new BadRequestException('Invalid user role');
         }
-        else if (user.role === 'artist'){
-        const query = 'INSERT INTO histories_artist (artist_id, ip) VALUES ($1, $2) RETURNING *'
-        const params = [user.id,ip]
-        await this.databaseService.executeTransaction(query,params);
-
+    
+        try {
+            await this.databaseService.executeTransaction(query, params);
+        } catch (error) {
+            throw new InternalServerErrorException('Database transaction failed');
         }
-        
+    
         return {
-            access_token: this.jwtService.sign(payload)
-        }
+            access_token: this.jwtService.sign(payload),
+        };
     }
 }

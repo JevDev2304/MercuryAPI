@@ -11,7 +11,6 @@ export class UserService {
   ) {}
 
   async findUserByEmail(email: string){
-    console.log(email)
     let query : string;
     let param : any[];
     query = 'SELECT * FROM users where users.email = $1';
@@ -133,10 +132,10 @@ export class UserService {
       await this.databaseService.executeTransaction(queryUpdate, paramsUpdate);
     }
     catch(error){
-      if (error === '23505'){
+      if (error.code === '23505'){
         throw new ConflictException('Already exist an User with this username or email')
       }
-      else if (error === '22007' || error === '22008'){
+      else if (error.code === '22007' || error.code === '22008'){
         throw new BadRequestException('Wrong Date Format');
       }
       else {
