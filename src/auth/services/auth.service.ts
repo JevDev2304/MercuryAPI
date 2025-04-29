@@ -1,21 +1,20 @@
-import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/services/user.service';
-import { ArtistService } from 'src/artist/services/artist.service';
-import { DatabaseService } from 'src/database/database.service';
-import { HashService } from 'src/crypt/services/hash.service';
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { UserService } from '../../user/services/user.service';
+import { ArtistService } from '../../artist/services/artist.service';
+import { DatabaseService } from '../../database/database.service';
+import { HashService } from '../../crypt/services/hash.service';
+import { BadRequestException, InternalServerErrorException, Injectable } from '@nestjs/common';
 import { LoginUserDto } from '../login.dto';
 
 
 @Injectable()
 export class AuthService {
     constructor(
-        private databaseService : DatabaseService,
-        private userService : UserService,
-        private artistService : ArtistService,
-        private hashService: HashService,
-        private jwtService : JwtService
+        private readonly databaseService : DatabaseService,
+        private readonly userService : UserService,
+        private readonly artistService : ArtistService,
+        private readonly hashService: HashService,
+        private readonly jwtService : JwtService
     ){}
     async validateUser(email: string , password: string){
         const user = (await this.userService.findUserByEmail(email));
@@ -50,7 +49,8 @@ export class AuthService {
         } else if (user.role === 'artist') {
             query = 'INSERT INTO histories_artist (artist_id, ip) VALUES ($1, $2) RETURNING *';
             params = [user.id, ip];
-        } else {
+        }
+         else {
             throw new BadRequestException('Invalid user role');
         }
     

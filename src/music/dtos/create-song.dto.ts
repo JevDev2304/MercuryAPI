@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, Length, IsNumber, IsBoolean } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsNumber} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSongDto {

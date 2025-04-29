@@ -9,9 +9,9 @@ import { UpdatePlaylistDto } from 'src/music/dtos/update-playlist.dto';
 @ApiTags('Playlist')
 @Controller('playlist')
 export class PlaylistController {
-  constructor(private playlistService: PlaylistService) {}
+  constructor(private readonly  playlistService: PlaylistService) {}
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Post()
   @ApiBody({ type: CreatePlaylistDto })
   @ApiResponse({ status: 201, description: 'Playlist created successfully' })

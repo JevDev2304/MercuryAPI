@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEmail, Length, IsOptional, IsNumber } from 'class-validator';
+import { IsString,  Length, IsOptional, IsNumber } from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateArtistDto } from './create-artist.dto';
 

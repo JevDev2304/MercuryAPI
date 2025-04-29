@@ -1,4 +1,4 @@
-import { IsNumber , IsString, Length} from 'class-validator';
+import { IsNumber } from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateAlbumDto } from './create-album.dto';
 

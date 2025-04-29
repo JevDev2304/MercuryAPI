@@ -53,33 +53,33 @@ describe('AuthService', () => {
   });
 
 describe('Login', () => {
-    it('C22 It should return a JSON with { access_token: <token> } (artist)', async () => {
+    it('It should return a JSON with { access_token: <token> } (artist)', async () => {
         const user = { id: 5, email: 'juanes@example.com', role: 'artist' };
         const result = await authService.login(user, '127.0.0.1');
     
         expect(result).toEqual({ access_token: 'mockedAccessToken' });
       });
     
-      it('C23 It should return a JSON with { access_token: <token> } (user)', async () => {
+      it('It should return a JSON with { access_token: <token> } (user)', async () => {
         const user = { id: 5, email: 'juanes@example.com', role: 'user' };
         const result = await authService.login(user, '127.0.0.1');
     
         expect(result).toEqual({ access_token: 'mockedAccessToken' });
       });
     
-      it('C24 It should return a BadRequestException (400) due the role is invalid', async () => {
+      it('It should return a BadRequestException (400) due the role is invalid', async () => {
         const user = { id: 5, email: 'juanes@example.com', role: 'cs50duck' };
         await expect(authService.login(user, '127.0.0.1')).rejects.toThrow(BadRequestException);
       });
     
-      it('C25 It should return an InternalServerErrorException (500) due the database is not working well (artist)', async () => {
+      it('It should return an InternalServerErrorException (500) due the database is not working well (artist)', async () => {
         databaseService.executeTransaction = jest.fn().mockRejectedValue(new Error('Database Error'));
     
         const user = { id: 5, email: 'juanes@example.com', role: 'artist' };
         await expect(authService.login(user, '127.0.0.1')).rejects.toThrow(InternalServerErrorException);
       });
     
-      it('C26 It should return an InternalServerErrorException (500) due the database is not working well (user)', async () => {
+      it('It should return an InternalServerErrorException (500) due the database is not working well (user)', async () => {
         databaseService.executeTransaction = jest.fn().mockRejectedValue(new Error('Database Error'));
     
         const user = { id: 5, email: 'juanes@example.com', role: 'user' };

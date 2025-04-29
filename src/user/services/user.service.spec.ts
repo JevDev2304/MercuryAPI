@@ -45,7 +45,6 @@ describe('UserService', () => {
 
     service = module.get<UserService>(UserService);
     databaseService = module.get<DatabaseService>(DatabaseService);
-    hashService = module.get<HashService>(HashService);
   });
   beforeEach(() => {
     jest.useFakeTimers();
@@ -59,7 +58,7 @@ describe('UserService', () => {
   });
 
 describe ('Create User', () => {
-  it('C1 Should return the user with good structure when the DTO has country attribute ', async () => {
+  it('It Should return the user with good structure when the DTO has country attribute ', async () => {
     const user = new CreateUserDto();
     user.username = 'jevo123';
     user.email = 'juanes46@gmail.com';
@@ -81,7 +80,7 @@ describe ('Create User', () => {
     });
   });
 
-  it('C2 Should return the user with good structure when the DTO  does not have country attribute ', async () => {
+  it('It Should return the user with good structure when the DTO  does not have country attribute ', async () => {
     databaseService.executeTransaction = jest.fn().mockImplementation((query, params) => ({
         data: [
           {
@@ -116,7 +115,7 @@ describe ('Create User', () => {
     });
   });
 
-  it('C3 It should throw an exception because the email or username is already in the database. (Dto has country)', async () => {
+  it('It should throw an exception because the email or username is already in the database. (Dto has country)', async () => {
     databaseService.executeTransaction = jest.fn().mockRejectedValue({
         code: '23505'
     });
@@ -131,7 +130,7 @@ describe ('Create User', () => {
 
   });
 
-  it('C4 It should throw a Bad request exception because the date format is wrong (Dto has country)', async () => {
+  it('It should throw a Bad request exception because the date format is wrong (Dto has country)', async () => {
     databaseService.executeTransaction = jest.fn().mockRejectedValue({
         code: '22007'
     });
@@ -146,7 +145,7 @@ describe ('Create User', () => {
 
   });
 
-  it('C5 It should throw an Internal Server exception because is an unknown error (Dto has country)', async () => {
+  it('It should throw an Internal Server exception because is an unknown error (Dto has country)', async () => {
     databaseService.executeTransaction = jest.fn().mockRejectedValue({
     });
     const user = new CreateUserDto();
@@ -160,7 +159,7 @@ describe ('Create User', () => {
 
   });
 
-  it('C6 It should throw an exception because the email or username is already in the database. (Dto does not have country)', async () => {
+  it('It should throw an exception because the email or username is already in the database. (Dto does not have country)', async () => {
     databaseService.executeTransaction = jest.fn().mockRejectedValue({
         code: '23505'
     });
@@ -174,7 +173,7 @@ describe ('Create User', () => {
 
   });
 
-  it('C7 It should throw a Bad request exception because the date format is wrong (Dto does not have country)', async () => {
+  it('It should throw a Bad request exception because the date format is wrong (Dto does not have country)', async () => {
     databaseService.executeTransaction = jest.fn().mockRejectedValue({
         code: '22007'
     });
@@ -187,7 +186,7 @@ describe ('Create User', () => {
 
   });
 
-  it('C8 It should throw an Internal Server exception because is an unknown error (Dto does not have country)', async () => {
+  it('It should throw an Internal Server exception because is an unknown error (Dto does not have country)', async () => {
     databaseService.executeTransaction = jest.fn().mockRejectedValue({
     });
     const user = new CreateUserDto();
@@ -205,7 +204,7 @@ describe ('Create User', () => {
   // Update user
 describe('Update User', () => {
 
-  it('C9 It should update the information of an user (Dto has a password)', async () => {
+  it('It should update the information of an user (Dto has a password)', async () => {
     databaseService.executeTransaction = jest.fn().mockImplementation((query, params) => ({
       data: [
         {
@@ -244,7 +243,7 @@ describe('Update User', () => {
 
   });
 
-  it('C10 It should update the information of an user (Dto does not have a password)', async () => {
+  it('It should update the information of an user (Dto does not have a password)', async () => {
     databaseService.executeTransaction = jest.fn().mockImplementation((query, params) => ({
       data: [
         {
@@ -282,7 +281,7 @@ describe('Update User', () => {
 
   });
 
-  it('C11 It should throw a Not Found Exception because the database Dto user id does not exist in the database (Dto has a password)', async () => {
+  it('It should throw a Not Found Exception because the database Dto user id does not exist in the database (Dto has a password)', async () => {
     service.findUserById = jest.fn().mockReturnValue(null);
     const user = new UpdateUserDto();
     user.id = 1835767;
@@ -296,7 +295,7 @@ describe('Update User', () => {
 
 
   });
-  it('C12 It should throw a Not Found Exception because the database Dto user id does not exist in the database (Dto does not have a password)', async () => {
+  it('It should throw a Not Found Exception because the database Dto user id does not exist in the database (Dto does not have a password)', async () => {
     service.findUserById = jest.fn().mockReturnValue(null);
     const user = new UpdateUserDto();
     user.id = 1835767;
@@ -310,7 +309,7 @@ describe('Update User', () => {
 
   });
 
-  it('C13 It should throw a Conflict Exception because in the database is another user with the new email (Dto has a password)', async () => {
+  it('It should throw a Conflict Exception because in the database is another user with the new email (Dto has a password)', async () => {
     service.findUserById =  jest.fn().mockReturnValue(null);
     databaseService.executeTransaction= jest.fn().mockRejectedValue({
       code: '23505'
@@ -329,7 +328,7 @@ describe('Update User', () => {
 
   });
 
-  it('C14 It should throw a Conflict Exception because in the database is another user with the new email (Dto does not have a password)', async () => {
+  it('It should throw a Conflict Exception because in the database is another user with the new email (Dto does not have a password)', async () => {
     databaseService.executeTransaction= jest.fn().mockRejectedValue({
       code:'23505'
     });
@@ -347,7 +346,7 @@ describe('Update User', () => {
 
   });
 
-  it('C15 It should throw a Bad Request Exception because the new birth is wrong (Dto has a password)', async () => {
+  it('It should throw a Bad Request Exception because the new birth is wrong (Dto has a password)', async () => {
     databaseService.executeTransaction= jest.fn().mockRejectedValue({
       code:'22007'
     });
@@ -368,7 +367,7 @@ describe('Update User', () => {
   });
 
 
-  it('C16 It should throw a Bad Request Exception because the new birth is wrong (Dto does not have  a password)', async () => {
+  it('It should throw a Bad Request Exception because the new birth is wrong (Dto does not have  a password)', async () => {
     databaseService.executeTransaction= jest.fn().mockRejectedValue({
       code:'22007'
     });
@@ -387,7 +386,7 @@ describe('Update User', () => {
 
   });
 
-  it('C17 It should throw an Internal Server exception because is an unknown error (Dto has password)', async () => {
+  it('It should throw an Internal Server exception because is an unknown error (Dto has password)', async () => {
     databaseService.executeTransaction= jest.fn().mockRejectedValue({
     });
     service.findUserById = jest.fn().mockReturnValue(true);
@@ -406,7 +405,7 @@ describe('Update User', () => {
   });
 
 
-  it('C18 It should throw an Internal Server exception because is an unknown error (Dto does not have password)', async () => {
+  it('It should throw an Internal Server exception because is an unknown error (Dto does not have password)', async () => {
     databaseService.executeTransaction= jest.fn().mockRejectedValue({
     });
     service.findUserById = jest.fn().mockReturnValue(true);
@@ -430,4 +429,7 @@ describe('Update User', () => {
 
 });
 
+describe ('FindUserById', () => {});
+
+describe('FindUserByEmail', () => {});
 

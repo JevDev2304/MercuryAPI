@@ -7,7 +7,6 @@ import { ArtistService } from 'src/artist/services/artist.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { CreateArtistDto } from 'src/artist/dtos/create-artist.dto';
 import { UpdateArtistDto } from 'src/artist/dtos/update-artist.dto';
-// import { UpdateUserDto } from 'src/user/dtos/update-user.dto';
 
 @ApiTags('Artist')
 @Controller('artist')

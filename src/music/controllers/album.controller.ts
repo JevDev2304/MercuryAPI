@@ -9,7 +9,7 @@ import { AlbumService } from '../services/album.service';
 @ApiTags('Album')
 @Controller('album')
 export class AlbumController {
-  constructor(private albumService: AlbumService) {}
+  constructor(private readonly albumService: AlbumService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()

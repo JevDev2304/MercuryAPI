@@ -1,11 +1,13 @@
 import { DataSource } from 'typeorm';
-import { Injectable, ConflictException, InternalServerErrorException, BadRequestException} from '@nestjs/common';
-
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class DatabaseService {
-  constructor(private dataSource: DataSource) {}
+  constructor(private readonly dataSource: DataSource) {}
 
+  /**
+   * Método original que ejecuta la transacción y sí guarda en la BD.
+   */
   async executeTransaction(query: string, params: any[] = []) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -17,9 +19,14 @@ export class DatabaseService {
       return { success: true, data: result };
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw error.code
+      throw error.code;
     } finally {
       await queryRunner.release();
     }
-}
+  }
+
+  /**
+   * Método que **nunca guarda en la BD**, pero retorna lo que **hubiera devuelto**.
+   */
+  
 }

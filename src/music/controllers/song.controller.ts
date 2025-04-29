@@ -1,4 +1,4 @@
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
 import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
 
 import {
@@ -11,13 +11,13 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { SongService } from 'src/music/services/song.service';
-import { CreateSongDto } from 'src/music/dtos/create-song.dto';
-import { UpdateSongDto } from 'src/music/dtos/update-song.dto';
+import { SongService } from '../services/song.service';
+import { CreateSongDto } from '../dtos/create-song.dto';
+import { UpdateSongDto } from '../dtos/update-song.dto';
 @ApiTags('Song')
 @Controller('song')
 export class SongController {
-  constructor(private songService: SongService) {}
+  constructor(private readonly songService: SongService) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -28,7 +28,7 @@ export class SongController {
     return response;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/addSongToPlaylist/:songId/:playlistId')
   @ApiResponse({
     status: 201,
@@ -220,72 +220,72 @@ export class SongController {
   @UseGuards(JwtAuthGuard)
   @Get('getById/:songId')
   @ApiResponse({
-        status: 200,
-        description: 'The song was retrieved successfully.',
-      })
+    status: 200,
+    description: 'The song was retrieved successfully.',
+  })
   async getSong(
-  @Param('songId') songId: string, // Cambia a string también
-      ) {
-        // Convierte a número
-        const numericSongId = parseInt(songId, 10); // Convierte a número
-        const response = await this.songService.findSongById(numericSongId);
-        return response;
-      }
+    @Param('songId') songId: string, // Cambia a string también
+  ) {
+    // Convierte a número
+    const numericSongId = parseInt(songId, 10); // Convierte a número
+    const response = await this.songService.findSongById(numericSongId);
+    return response;
+  }
 
-      @UseGuards(JwtAuthGuard)
-      @Get('top20')
-      @ApiResponse({
-            status: 200,
-            description: 'The songs was retrieved successfully.',
-          })
+  @UseGuards(JwtAuthGuard)
+  @Get('top20')
+  @ApiResponse({
+    status: 200,
+    description: 'The songs was retrieved successfully.',
+  })
 
-      async getTop20Songs( // Cambia a string también
-) {
-            // Convierte a número// Convierte a número
-            const response = await this.songService.top20Songs();
-            return response;
-          }
+  async getTop20Songs( // Cambia a string también
+  ) {
+    // Convierte a número// Convierte a número
+    const response = await this.songService.top20Songs();
+    return response;
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('getSongsByGenreId/:genreId')
   @ApiResponse({
-        status: 200,
-        description: 'The songs were retrieved successfully.',
-      })
+    status: 200,
+    description: 'The songs were retrieved successfully.',
+  })
   async getSongsByGenreId(
-  @Param('genreId') genreId: string, // Cambia a string también
-      ) {
-        // Convierte a número
-        const numericGenreId = parseInt(genreId, 10); // Convierte a número
-        const response = await this.songService.findSongsByGenreId(numericGenreId);
-        return response;
-      }
+    @Param('genreId') genreId: string, // Cambia a string también
+  ) {
+    // Convierte a número
+    const numericGenreId = parseInt(genreId, 10); // Convierte a número
+    const response = await this.songService.findSongsByGenreId(numericGenreId);
+    return response;
+  }
 
-      @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('getRandomSongs/:n')
   @ApiResponse({
-        status: 200,
-        description: 'The random songs were retrieved successfully.',
-      })
+    status: 200,
+    description: 'The random songs were retrieved successfully.',
+  })
   async getRandomSongs(
-  @Param('n') n: string, // Cambia a string también
-      ) {
-        // Convierte a número
-        const numericN = parseInt(n, 10); // Convierte a número
-        const response = await this.songService.getRandomSongs(numericN);
-        return response;
-      }
+    @Param('n') n: string, // Cambia a string también
+  ) {
+    // Convierte a número
+    const numericN = parseInt(n, 10); // Convierte a número
+    const response = await this.songService.getRandomSongs(numericN);
+    return response;
+  }
 
-      @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('getSongsByWord/:word')
   @ApiResponse({
-        status: 200,
-        description: 'The songs were retrieved successfully.',
-      })
+    status: 200,
+    description: 'The songs were retrieved successfully.',
+  })
   async getSongsByWord(
-  @Param('word')  word: string, // Cambia a string también
-      ) {
-        const response = await this.songService.findSongsforSearchEngine(word);
-        return response;
-      }
+    @Param('word') word: string, // Cambia a string también
+  ) {
+    const response = await this.songService.findSongsforSearchEngine(word);
+    return response;
+  }
 }

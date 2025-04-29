@@ -1,12 +1,8 @@
-import { InternalServerErrorException , ConflictException, BadRequestException,NotFoundException, MethodNotAllowedException} from '@nestjs/common';
-
-import { Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
+import { InternalServerErrorException , Injectable, ConflictException, BadRequestException,NotFoundException, MethodNotAllowedException} from '@nestjs/common';
+import { DatabaseService } from '../../database/database.service';
 import { CreateArtistDto } from '../dtos/create-artist.dto';
 import { UpdateArtistDto } from '../dtos/update-artist.dto';
-import { HashService } from 'src/crypt/services/hash.service';
-import { Not } from 'typeorm';
-
+import { HashService } from '../../crypt/services/hash.service';
 
 @Injectable()
 export class ArtistService {

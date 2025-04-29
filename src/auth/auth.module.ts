@@ -8,7 +8,6 @@ import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
-import { ArtistService } from 'src/artist/services/artist.service';
 import { ArtistModule } from 'src/artist/artist.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { CryptModule } from 'src/crypt/crypt.module';
