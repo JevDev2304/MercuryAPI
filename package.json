@@ -17,11 +17,9 @@
     "test": "jest",
     "test:mocha": "mocha -r ts-node/register 'src/mocha-specs/**/*.spec.ts'",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage --coverageDirectory=jest-coverage",
+    "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "merge:cov": "cat jest-coverage/lcov.info mocha-coverage/lcov.info > coverage/lcov.info",
-    "coverage:all": "npm run test:cov && npm run mocha:cov && npm run merge:cov"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
 
     
   },
@@ -77,34 +75,5 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s",
-      "!**/main.ts",
-      "!**/app.module.ts",
-      "!**/*.module.ts",
-      "!**/*.dto.ts",
-      "!**/*.guard.ts",
-      "!**/*.strategy.ts",
-      "!**/*.spec.ts",
-      "!**/__tests__/**",
-      "!test/**"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }
