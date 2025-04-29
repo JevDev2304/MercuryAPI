@@ -20,8 +20,8 @@ const config: Config = {
     '!**/*.strategy.ts',
     '!**/*.spec.ts',       // Ignorar los archivos de test
     '!**/__tests__/**',    // Ignorar la carpeta de tests
-    '!test/**',            // Ignorar la carpeta test
-    '!**/src/**',          // Ignorar todo el código fuente de src
+    '!test/**',            // Ignorar la carpeta test,
+    
   ],
   coverageDirectory: '../coverage',  // Dónde se guardará el reporte de cobertura
   testEnvironment: 'node',           // Entorno de pruebas (en este caso, Node.js)
