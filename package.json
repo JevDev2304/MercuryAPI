@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "mocha:cov": "nyc --reporter=lcov mocha 'mocha-specs/**/*.spec.ts' --require ts-node/register",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -16,9 +17,13 @@
     "test": "jest",
     "test:mocha": "mocha -r ts-node/register 'src/mocha-specs/**/*.spec.ts'",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
+    "test:cov": "jest --coverage --coverageDirectory=jest-coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "merge:cov": "cat jest-coverage/lcov.info mocha-coverage/lcov.info > coverage/lcov.info",
+    "coverage:all": "npm run test:cov && npm run mocha:cov && npm run merge:cov"
+
+    
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -62,6 +67,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.7.0",
     "mocha": "^11.1.0",
+    "nyc": "^17.1.0",
     "prettier": "^3.0.0",
     "sinon": "^20.0.0",
     "source-map-support": "^0.5.21",
